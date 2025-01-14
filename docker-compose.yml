@@ -1,0 +1,26 @@
+services:
+
+  consumer:
+    image: kafka-python-image-consumer
+    environment:
+      KAFKA_BROKER: kafka-central.eu-01.whalebone.io:9094
+      KAFKA_TOPIC: dns-enriched
+      KAFKA_CONSUMER_GROUP: dns-enriched-cvut-cz
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: 9000
+      CLICKHOUSE_USER: xxxxx
+      CLICKHOUSE_PASSWORD: xxxxx
+      BATCH_SIZE: 10000
+      MAX_DNS_DATA_SIZE: 100
+    depends_on:
+      - clickhouse
+
+  clickhouse:
+    image: yandex/clickhouse-server:latest
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./users.xml:/etc/clickhouse-server/users.xml
+
+volumes:
+  clickhouse_data:
+  postgres_data:
